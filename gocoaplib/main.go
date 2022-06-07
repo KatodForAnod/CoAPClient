@@ -20,7 +20,7 @@ func main() {
 		path = os.Args[1]
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*9999)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
 	resp, err := co.Get(ctx, path)
@@ -33,4 +33,10 @@ func main() {
 	log.Printf("Response payload: %v", resp.String())
 	fmt.Println(string(a))
 
+	/*resp, err := co.Post(ctx, path, message.TextPlain, bytes.NewReader([]byte("B hello world")))
+	if err != nil {
+		log.Fatalf("Error sending request: %v", err)
+	}
+
+	log.Printf("Response payload: %v", resp.String())*/
 }
