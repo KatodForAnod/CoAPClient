@@ -1,5 +1,17 @@
 package main
 
+/*
+import (
+	"bytes"
+	"fmt"
+	"github.com/plgd-dev/go-coap/v2/message"
+	"github.com/plgd-dev/go-coap/v2/udp"
+	"log"
+	"os"
+	"time"
+)
+
+
 import (
 	"context"
 	"fmt"
@@ -10,7 +22,7 @@ import (
 	"github.com/plgd-dev/go-coap/v2/udp"
 )
 
-func main() {
+func main22() {
 	co, err := udp.Dial("localhost:5688")
 	if err != nil {
 		log.Fatalf("Error dialing: %v", err)
@@ -33,10 +45,11 @@ func main() {
 	log.Printf("Response payload: %v", resp.String())
 	fmt.Println(string(a))
 
-	/*resp, err := co.Post(ctx, path, message.TextPlain, bytes.NewReader([]byte("B hello world")))
+	resp, err := co.Post(ctx, path, message.TextPlain, bytes.NewReader([]byte("B hello world")))
 	if err != nil {
 		log.Fatalf("Error sending request: %v", err)
 	}
 
-	log.Printf("Response payload: %v", resp.String())*/
+	log.Printf("Response payload: %v", resp.String())
 }
+*/
