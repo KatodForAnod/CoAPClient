@@ -46,3 +46,16 @@ func (c *IoTsController) StartInformationCollect() error {
 
 	return nil // error only once returns
 }
+
+func (c *IoTsController) StopInformationCollect() error {
+	log.Println("stop information collect")
+
+	for _, device := range c.ioTDevices {
+		err := device.StopObserveInform()
+		if err != nil {
+			log.Println(err)
+		}
+	}
+
+	return nil
+}
