@@ -53,6 +53,7 @@ func (d *IoTDevice) ObserveInform(ctx context.Context,
 }
 
 func (d *IoTDevice) StopObserveInform() error {
+	log.Println("stop observe information")
 	b := false
 	d.isObserveInformProcess = &b
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
