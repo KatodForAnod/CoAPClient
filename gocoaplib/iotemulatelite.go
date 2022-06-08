@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -18,11 +19,24 @@ func main() {
 	}
 
 	num := 0
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*9)
 	defer cancel()
+
+	resp, err := co.Get(ctx, "/time")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(resp.String())
 
 	obs, err := co.Observe(ctx, "/some/path", func(req *pool.Message) {
 		log.Printf("Got %+v\n", req)
+		buff := make([]byte, 300)
+		_, err := req.Body().Read(buff)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(string(buff))
 		num++
 		if num >= 10 {
 			sync <- true
