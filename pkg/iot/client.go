@@ -2,6 +2,7 @@ package iot
 
 import (
 	"CoAPClient/pkg/config"
+	"errors"
 	"github.com/plgd-dev/go-coap/v2/udp"
 	"github.com/plgd-dev/go-coap/v2/udp/client"
 	"github.com/plgd-dev/go-coap/v2/udp/message/pool"
@@ -28,6 +29,12 @@ func (d *IoTDevice) Init(config config.IotConfig) {
 
 func (d *IoTDevice) Ping(ctx context.Context) error {
 	log.Println("ping iot", d.name, "device")
+	if d.conn == nil {
+		err := errors.New("nil connection if iot " + d.name)
+		log.Println(err)
+		return err
+	}
+
 	if err := d.conn.Ping(ctx); err != nil {
 		log.Println(err)
 		return err
