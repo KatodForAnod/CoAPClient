@@ -5,7 +5,6 @@ import (
 	"CoAPClient/pkg/iot"
 	"CoAPClient/pkg/memory"
 	"context"
-	"github.com/plgd-dev/go-coap/v2/udp/message/pool"
 	"log"
 	"time"
 )
@@ -36,10 +35,9 @@ func (c *IoTsController) StartInformationCollect() error {
 				continue
 			}
 		}
-
 		// mb create new context?
 		// if device already collect inform?
-		err := device.ObserveInform(ctx, c.saveData)
+		err := device.ObserveInform(ctx, c.mem.Save)
 		if err != nil {
 			log.Println(err)
 			continue
@@ -47,25 +45,4 @@ func (c *IoTsController) StartInformationCollect() error {
 	}
 
 	return nil // error only once returns
-}
-
-// if data process diff from iot device to iot device mb move func to super iot class??
-func (c *IoTsController) saveData(req *pool.Message) {
-	log.Printf("Got %+v\n", req)
-	buff := make([]byte, 300)
-	_, err := req.Body().Read(buff)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	infType, err := req.Message.ContentFormat()
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	// fmt.Println(string(buff))
-	if err := c.mem.Save(buff, infType); err != nil {
-		log.Println(err)
-		return
-	}
 }

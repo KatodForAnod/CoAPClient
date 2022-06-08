@@ -3,6 +3,7 @@ package iot
 import (
 	"CoAPClient/pkg/config"
 	"errors"
+	"github.com/plgd-dev/go-coap/v2/message"
 	"github.com/plgd-dev/go-coap/v2/udp"
 	"github.com/plgd-dev/go-coap/v2/udp/client"
 	"github.com/plgd-dev/go-coap/v2/udp/message/pool"
@@ -44,8 +45,31 @@ func (d *IoTDevice) Ping(ctx context.Context) error {
 }
 
 func (d *IoTDevice) ObserveInform(ctx context.Context,
-	processMsg func(req *pool.Message)) error {
+	save func([]byte, message.MediaType) error) error {
 	log.Println("observe information iot", d.name)
+
+	sync := make(chan bool)
+	processMsg := func(req *pool.Message) {
+		log.Printf("Got %+v\n", req)
+		buff := make([]byte, 300)
+		if _, err := req.Body().Read(buff); err != nil {
+			log.Println(err)
+			sync <- true
+			return
+		}
+		infType, err := req.Message.ContentFormat()
+		if err != nil {
+			log.Println(err)
+			sync <- true
+			return
+		}
+		if err := save(buff, infType); err != nil {
+			log.Println(err)
+			sync <- true
+			return
+		}
+	}
+
 	b := true
 	d.isObserveInformProcess = &b
 	observe, err := d.conn.Observe(ctx, "/some/path", processMsg)
@@ -53,6 +77,13 @@ func (d *IoTDevice) ObserveInform(ctx context.Context,
 		log.Println(observe)
 		b := false //check change
 		d.isObserveInformProcess = &b
+		return err
+	}
+
+	<-sync
+	d.observe = observe
+	if err := d.StopObserveInform(); err != nil {
+		log.Println(err)
 		return err
 	}
 
