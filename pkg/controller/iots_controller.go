@@ -10,7 +10,7 @@ import (
 )
 
 type IoTsController struct {
-	ioTDevices []iot.IoTDevice // TODO wrap into interface
+	ioTDevices []*iot.IoTDevice // TODO wrap into interface
 	mem        memory.Memory
 }
 
@@ -18,7 +18,7 @@ func (c *IoTsController) Init(config config.Config, mem memory.Memory) {
 	c.mem = mem
 }
 
-func (c *IoTsController) AddIoTs(iots []iot.IoTDevice) {
+func (c *IoTsController) AddIoTs(iots []*iot.IoTDevice) {
 	c.ioTDevices = append(c.ioTDevices, iots...)
 }
 
