@@ -21,6 +21,10 @@ func (f MemoryFmt) Save(msg []byte, typeMsg message.MediaType) error {
 	return nil
 }
 
+func (f MemoryFmt) Load() ([]byte, error) {
+	return nil, nil
+}
+
 type MemBuff struct {
 	fileName string
 	writer   *bufio.Writer
