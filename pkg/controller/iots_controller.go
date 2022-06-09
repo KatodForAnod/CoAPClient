@@ -41,7 +41,7 @@ func (c *IoTsController) StartInformationCollect() error {
 			continue
 		}
 
-		err := device.ObserveInform(c.mem.Save)
+		err := device.ObserveInform(c.createSaveFunc(time.Second*2, device))
 		if err != nil {
 			log.Println(err)
 		}
