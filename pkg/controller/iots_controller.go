@@ -22,6 +22,7 @@ func (c *IoTsController) Init(config config.Config, mem memory.Memory) {
 }
 
 func (c *IoTsController) AddIoTs(iots []*iot.IoTDevice) error {
+	log.Println("add iots")
 	for _, device := range iots {
 		if _, isExist := c.ioTDevices[device.GetName()]; isExist {
 			err := errors.New("device " + device.GetName() + " already exist")
@@ -37,6 +38,7 @@ func (c *IoTsController) AddIoTs(iots []*iot.IoTDevice) error {
 }
 
 func (c *IoTsController) RemoveIoTs(IoTsConfig []config.IotConfig) {
+	log.Println("remove iots")
 	for _, device := range IoTsConfig {
 		if iotDevice, isExist := c.ioTDevices[device.Name]; isExist {
 			err := iotDevice.StopObserveInform()
