@@ -4,12 +4,14 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/plgd-dev/go-coap/v2/message"
+	"io/ioutil"
 	"log"
 	"os"
 )
 
 type Memory interface {
 	Save([]byte, message.MediaType) error
+	Load() ([]byte, error)
 }
 
 type MemoryFmt struct{}
@@ -27,11 +29,11 @@ type MemBuff struct {
 func (b *MemBuff) InitStruct(fileName string) error {
 	b.fileName = fileName
 	file, err := os.Create(fileName)
-	writer := bufio.NewWriter(file)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
+	writer := bufio.NewWriter(file)
 
 	b.writer = writer
 	return nil
@@ -45,6 +47,15 @@ func (b *MemBuff) Save(msg []byte, typeMsg message.MediaType) error {
 	}
 
 	return nil
+}
+
+func (b *MemBuff) Load() ([]byte, error) {
+	file, err := ioutil.ReadFile(b.fileName)
+	if err != nil {
+		return nil, err
+	}
+
+	return file, nil
 }
 
 func (b *MemBuff) FlushToFile() error {
