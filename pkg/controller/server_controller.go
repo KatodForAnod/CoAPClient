@@ -58,6 +58,7 @@ func (c *Controller) RemoveIoTDeviceObserve(ioTsConfig []config.IotConfig) error
 }
 
 func (c *Controller) GetLastNRowsLogs(nRows int) ([]string, error) {
+	log.Println("controller get lastNRowsLogs")
 	file, err := logsetting.OpenLastLogFile()
 	if err != nil {
 		log.Println(err)
