@@ -23,7 +23,7 @@ func (c *IoTsController) Init(config config.Config, mem memory.Memory) {
 
 func (c *IoTsController) AddIoTs(iots []*iot.IoTDevice) error {
 	for _, device := range iots {
-		if _, isExist := c.ioTDevices[device.GetName()]; !isExist {
+		if _, isExist := c.ioTDevices[device.GetName()]; isExist {
 			err := errors.New("device " + device.GetName() + " already exist")
 			log.Println(err)
 			return err
