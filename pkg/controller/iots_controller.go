@@ -5,22 +5,35 @@ import (
 	"CoAPProxyServer/pkg/iot"
 	"CoAPProxyServer/pkg/memory"
 	"context"
+	"errors"
 	"github.com/plgd-dev/go-coap/v2/message"
 	"log"
 	"time"
 )
 
 type IoTsController struct {
-	ioTDevices []*iot.IoTDevice // TODO wrap into interface
+	ioTDevices map[string]*iot.IoTDevice // TODO wrap into interface
 	mem        memory.Memory
 }
 
 func (c *IoTsController) Init(config config.Config, mem memory.Memory) {
 	c.mem = mem
+	c.ioTDevices = make(map[string]*iot.IoTDevice)
 }
 
-func (c *IoTsController) AddIoTs(iots []*iot.IoTDevice) {
-	c.ioTDevices = append(c.ioTDevices, iots...)
+func (c *IoTsController) AddIoTs(iots []*iot.IoTDevice) error {
+	for _, device := range iots {
+		if _, isExist := c.ioTDevices[device.GetName()]; !isExist {
+			err := errors.New("device " + device.GetName() + " already exist")
+			log.Println(err)
+			return err
+		}
+	}
+
+	for _, device := range iots {
+		c.ioTDevices[device.GetName()] = device
+	}
+	return nil
 }
 
 func (c *IoTsController) StartInformationCollect() error {
@@ -54,7 +67,9 @@ func (c *IoTsController) StopInformationCollect() error {
 	log.Println("stop information collect")
 
 	for _, device := range c.ioTDevices {
-		// check if already stop
+		if !device.IsObserveInformProcess() {
+			continue // if device already stopped
+		}
 		err := device.StopObserveInform()
 		if err != nil {
 			log.Println(err)
