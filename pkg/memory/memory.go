@@ -46,11 +46,11 @@ func (b *MemBuff) Save(msg []byte, typeMsg message.MediaType, nameDevice string)
 	log.Println("save in membuff")
 	buff, isExist := b.buffers[nameDevice]
 	if !isExist {
-		newBuff := make([]byte, len(msg))
-		buff = newBuff
-		b.buffers[nameDevice] = newBuff
+		newBuff := make([]byte, 0)
+		buff = append(newBuff, msg...)
 	}
 	buff = append(buff, msg...)
+	b.buffers[nameDevice] = buff
 
 	return nil
 }
@@ -81,7 +81,6 @@ func (b *MemBuff) FlushToFile(nameDevice string) error {
 		log.Println(err)
 		return err
 	}
-
 	_, err = file.Write(buff)
 	if err != nil {
 		log.Println(err)
