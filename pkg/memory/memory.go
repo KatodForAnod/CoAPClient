@@ -27,6 +27,7 @@ type MemBuff struct {
 }
 
 func (b *MemBuff) InitStruct(fileName string) error {
+	log.Println("init membuff")
 	b.fileName = fileName
 	file, err := os.Create(fileName)
 	if err != nil {
@@ -40,6 +41,7 @@ func (b *MemBuff) InitStruct(fileName string) error {
 }
 
 func (b *MemBuff) Save(msg []byte, typeMsg message.MediaType) error {
+	log.Println("save in membuff")
 	_, err := b.writer.WriteString(string(msg[:len(msg)]) + "\n")
 	if err != nil {
 		log.Println(err)
@@ -50,6 +52,7 @@ func (b *MemBuff) Save(msg []byte, typeMsg message.MediaType) error {
 }
 
 func (b *MemBuff) Load() ([]byte, error) {
+	log.Println("load from membuff")
 	file, err := ioutil.ReadFile(b.fileName)
 	if err != nil {
 		return nil, err
@@ -59,6 +62,7 @@ func (b *MemBuff) Load() ([]byte, error) {
 }
 
 func (b *MemBuff) FlushToFile() error {
+	log.Println("fluash to file in membuff")
 	if err := b.writer.Flush(); err != nil {
 		log.Println(err)
 		return err
