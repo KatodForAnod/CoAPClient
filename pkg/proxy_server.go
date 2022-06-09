@@ -23,6 +23,7 @@ func (s *Server) getInformationFromIotDevice(w http.ResponseWriter, r *http.Requ
 	_, err = w.Write(inf)
 	if err != nil {
 		log.Println(err)
+		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
 	}
 }
