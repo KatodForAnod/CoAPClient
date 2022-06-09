@@ -3,6 +3,7 @@ package controller
 import (
 	"CoAPClient/pkg/config"
 	"CoAPClient/pkg/memory"
+	"log"
 )
 
 type Controller struct {
@@ -15,5 +16,6 @@ func (c *Controller) InitStruct(config config.Config, mem memory.Memory) {
 
 // args to know what type info must recieve?
 func (c *Controller) GetInformation() ([]byte, error) {
+	log.Println("controller get information")
 	return c.mem.Load()
 }
