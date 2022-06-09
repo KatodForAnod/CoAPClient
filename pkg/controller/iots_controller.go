@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"CoAPClient/pkg/config"
-	"CoAPClient/pkg/iot"
-	"CoAPClient/pkg/memory"
+	"CoAPProxyServer/pkg/config"
+	"CoAPProxyServer/pkg/iot"
+	"CoAPProxyServer/pkg/memory"
 	"context"
 	"github.com/plgd-dev/go-coap/v2/message"
 	"log"

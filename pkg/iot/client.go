@@ -1,7 +1,7 @@
 package iot
 
 import (
-	"CoAPClient/pkg/config"
+	"CoAPProxyServer/pkg/config"
 	"errors"
 	"github.com/plgd-dev/go-coap/v2/message"
 	"github.com/plgd-dev/go-coap/v2/udp"
@@ -14,7 +14,7 @@ import (
 
 type IoTDevice struct {
 	addr string
-	name string
+	name string // need getter and id for every iot device
 	conn *client.ClientConn
 
 	observe                *client.Observation

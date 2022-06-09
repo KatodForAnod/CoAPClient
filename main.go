@@ -1,10 +1,10 @@
 package main
 
 import (
-	"CoAPClient/pkg/config"
-	"CoAPClient/pkg/controller"
-	"CoAPClient/pkg/iot"
-	"CoAPClient/pkg/memory"
+	"CoAPProxyServer/pkg/config"
+	"CoAPProxyServer/pkg/controller"
+	"CoAPProxyServer/pkg/iot"
+	"CoAPProxyServer/pkg/memory"
 	"time"
 )
 

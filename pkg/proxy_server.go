@@ -1,8 +1,8 @@
 package main
 
 import (
-	"CoAPClient/pkg/config"
-	"CoAPClient/pkg/controller"
+	"CoAPProxyServer/pkg/config"
+	"CoAPProxyServer/pkg/controller"
 	"log"
 	"net/http"
 )

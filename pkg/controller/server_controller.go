@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"CoAPClient/pkg/config"
-	"CoAPClient/pkg/memory"
+	"CoAPProxyServer/pkg/config"
+	"CoAPProxyServer/pkg/memory"
 	"log"
 )
 

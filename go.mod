@@ -1,4 +1,4 @@
-module CoAPClient
+module CoAPProxyServer
 
 go 1.17
 
