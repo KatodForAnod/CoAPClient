@@ -5,6 +5,7 @@ import (
 	"CoAPClient/pkg/iot"
 	"CoAPClient/pkg/memory"
 	"context"
+	"github.com/plgd-dev/go-coap/v2/message"
 	"log"
 	"time"
 )
@@ -53,6 +54,7 @@ func (c *IoTsController) StopInformationCollect() error {
 	log.Println("stop information collect")
 
 	for _, device := range c.ioTDevices {
+		// check if already stop
 		err := device.StopObserveInform()
 		if err != nil {
 			log.Println(err)
@@ -60,4 +62,22 @@ func (c *IoTsController) StopInformationCollect() error {
 	}
 
 	return nil
+}
+
+func (c *IoTsController) createSaveFunc(d time.Duration,
+	iotDevice *iot.IoTDevice) func([]byte, message.MediaType) error {
+	timer := time.AfterFunc(d, func() {
+		if iotDevice.IsObserveInformProcess() {
+			log.Println("iot device", "iotIdent", "not responding")
+		}
+	})
+
+	return func(msg []byte, msgType message.MediaType) error {
+		timer.Reset(d)
+		if err := c.mem.Save(msg, msgType); err != nil {
+			log.Println(err)
+			return err
+		}
+		return nil
+	}
 }
