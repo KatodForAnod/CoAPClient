@@ -14,8 +14,14 @@ func (c *Controller) InitStruct(config config.Config, mem memory.Memory) {
 	c.mem = mem
 }
 
-// args to know what type info must recieve?
-func (c *Controller) GetInformation() ([]byte, error) {
-	log.Println("controller get information")
-	return []byte{}, nil
+func (c *Controller) GetInformation(deviceName string) ([]byte, error) {
+	log.Println("controller get information of iot device", deviceName)
+
+	load, err := c.mem.Load(deviceName)
+	if err != nil {
+		log.Println(err)
+		return []byte{}, err
+	}
+
+	return load, nil
 }
