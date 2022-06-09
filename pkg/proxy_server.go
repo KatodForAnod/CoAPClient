@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 type Server struct {
@@ -77,6 +79,38 @@ func (s *Server) removeIotDevice(w http.ResponseWriter, r *http.Request) {
 	deviceName := deviceNames[0]
 
 	err := s.controller.RemoveIoTDeviceObserve([]config.IotConfig{{Name: deviceName}})
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func (s *Server) getLogs(w http.ResponseWriter, r *http.Request) {
+	log.Println("handler getLogs")
+	countLogsArr := r.URL.Query()["countLogs"]
+	if len(countLogsArr) == 0 {
+		log.Println("count logs not found")
+		fmt.Fprintf(w, "set count logs")
+		return
+	}
+	countLogsStr := countLogsArr[0]
+	countLogs, err := strconv.Atoi(countLogsStr)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	logs, err := s.controller.GetLastNRowsLogs(countLogs)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	allLogs := strings.Join(logs, "\n")
+	_, err = w.Write([]byte(allLogs))
 	if err != nil {
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
