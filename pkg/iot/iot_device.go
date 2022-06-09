@@ -15,7 +15,7 @@ import (
 type IoTDevice struct {
 	id   int
 	addr string
-	name string // need getter and id for every iot device
+	name string // name is should be unic
 	conn *client.ClientConn
 
 	observe                *client.Observation

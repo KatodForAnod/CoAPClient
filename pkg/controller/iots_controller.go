@@ -74,7 +74,7 @@ func (c *IoTsController) createSaveFunc(d time.Duration,
 
 	return func(msg []byte, msgType message.MediaType) error {
 		timer.Reset(d)
-		if err := c.mem.Save(msg, msgType); err != nil {
+		if err := c.mem.Save(msg, msgType, iotDevice.GetName()); err != nil {
 			log.Println(err)
 			return err
 		}
