@@ -68,7 +68,7 @@ func (c *IoTsController) createSaveFunc(d time.Duration,
 	iotDevice *iot.IoTDevice) func([]byte, message.MediaType) error {
 	timer := time.AfterFunc(d, func() {
 		if iotDevice.IsObserveInformProcess() {
-			log.Println("iot device", "iotIdent", "not responding")
+			log.Println("iot device -", iotDevice.GetName(), "not responding")
 		}
 	})
 
