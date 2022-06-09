@@ -31,5 +31,5 @@ func (s *Server) StartServer(config config.Config, controller controller.Control
 	s.controller = controller
 
 	http.HandleFunc("/", s.getInformationFromIotDevice)
-	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+	log.Fatal(http.ListenAndServe(config.ProxyServerAddr, nil))
 }
