@@ -35,12 +35,14 @@ func (c *IoTsController) StartInformationCollect() error {
 				continue
 			}
 		}
-		// mb create new context?
-		// if device already collect inform?
-		err := device.ObserveInform(ctx, c.mem.Save)
+
+		if device.IsObserveInformProcess() {
+			continue
+		}
+
+		err := device.ObserveInform(c.mem.Save)
 		if err != nil {
 			log.Println(err)
-			continue
 		}
 	}
 

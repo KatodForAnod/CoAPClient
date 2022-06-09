@@ -44,28 +44,26 @@ func (d *IoTDevice) Ping(ctx context.Context) error {
 	return nil
 }
 
-func (d *IoTDevice) ObserveInform(ctx context.Context,
-	save func([]byte, message.MediaType) error) error {
+func (d *IoTDevice) ObserveInform(save func([]byte, message.MediaType) error) error {
 	log.Println("observe information iot", d.name)
 
-	sync := make(chan bool)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
 	processMsg := func(req *pool.Message) {
 		log.Printf("Got %+v\n", req)
 		buff := make([]byte, 300)
 		if _, err := req.Body().Read(buff); err != nil {
 			log.Println(err)
-			sync <- true
 			return
 		}
 		infType, err := req.Message.ContentFormat()
 		if err != nil {
 			log.Println(err)
-			sync <- true
 			return
 		}
 		if err := save(buff, infType); err != nil {
 			log.Println(err)
-			sync <- true
 			return
 		}
 	}
@@ -80,13 +78,7 @@ func (d *IoTDevice) ObserveInform(ctx context.Context,
 		return err
 	}
 
-	<-sync
 	d.observe = observe
-	if err := d.StopObserveInform(); err != nil {
-		log.Println(err)
-		return err
-	}
-
 	return nil
 }
 
