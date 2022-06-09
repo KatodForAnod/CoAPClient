@@ -36,6 +36,23 @@ func (c *IoTsController) AddIoTs(iots []*iot.IoTDevice) error {
 	return nil
 }
 
+func (c *IoTsController) RemoveIoTs(IoTsConfig []config.IotConfig) {
+	for _, device := range IoTsConfig {
+		if iotDevice, isExist := c.ioTDevices[device.Name]; isExist {
+			err := iotDevice.StopObserveInform()
+			if err != nil {
+				log.Println(err)
+			}
+			err = iotDevice.Disconnect()
+			if err != nil {
+				log.Println(err)
+			}
+
+			delete(c.ioTDevices, device.Name)
+		}
+	}
+}
+
 func (c *IoTsController) StartInformationCollect() error {
 	log.Println("start information collect")
 
@@ -44,7 +61,7 @@ func (c *IoTsController) StartInformationCollect() error {
 		defer cancel()
 		if err := device.Ping(ctx); err != nil {
 			log.Println(err)
-			if err := device.Connect(); err != nil {
+			if err := device.Connect(); err != nil { // when connect need restart IsObserveInformProcess
 				log.Println(err)
 				continue
 			}
