@@ -13,12 +13,21 @@ import (
 )
 
 type IoTDevice struct {
+	id   int
 	addr string
 	name string // need getter and id for every iot device
 	conn *client.ClientConn
 
 	observe                *client.Observation
 	isObserveInformProcess *bool
+}
+
+func (d *IoTDevice) GetName() string {
+	return d.name
+}
+
+func (d *IoTDevice) GetId() int {
+	return d.id
 }
 
 func (d *IoTDevice) Init(config config.IotConfig) {
