@@ -3,6 +3,7 @@ package controller
 import (
 	"CoAPProxyServer/pkg/config"
 	"CoAPProxyServer/pkg/iot"
+	"CoAPProxyServer/pkg/logsetting"
 	"CoAPProxyServer/pkg/memory"
 	"log"
 )
@@ -54,4 +55,20 @@ func (c *Controller) RemoveIoTDeviceObserve(ioTsConfig []config.IotConfig) error
 	log.Println("controller remove ioTDeviceObserve")
 	c.ioTsController.RemoveIoTs(ioTsConfig)
 	return nil
+}
+
+func (c *Controller) GetLastNRowsLogs(nRows int) ([]string, error) {
+	file, err := logsetting.OpenLastLogFile()
+	if err != nil {
+		log.Println(err)
+		return []string{}, err
+	}
+
+	logs, err := logsetting.GetNLastLines(file, nRows)
+	if err != nil {
+		log.Println(err)
+		return []string{}, err
+	}
+
+	return logs, nil
 }
