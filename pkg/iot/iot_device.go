@@ -61,7 +61,13 @@ func (d *IoTDevice) ObserveInform(save func([]byte, message.MediaType) error) er
 
 	processMsg := func(req *pool.Message) {
 		log.Printf("Got %+v\n", req)
-		buff := make([]byte, 300)
+		size, err := req.BodySize()
+		if err != nil {
+			log.Println(err)
+			size = 300
+		}
+
+		buff := make([]byte, size)
 		if _, err := req.Body().Read(buff); err != nil {
 			log.Println(err)
 			return
