@@ -7,22 +7,32 @@ import (
 	"CoAPProxyServer/pkg/logsetting"
 	"CoAPProxyServer/pkg/memory"
 	serv "CoAPProxyServer/pkg/server"
+	"flag"
 	"log"
 	"time"
 )
 
 func main() {
+	var proxyServerAddr string
+	flag.StringVar(&proxyServerAddr, "proxyAddr",
+		"", "address of http server")
+	flag.Parse()
+
 	log.SetFlags(log.Lshortfile)
 	er := logsetting.LogInit()
 	if er != nil {
 		log.Fatalln(er)
 	}
 
+	conf, _ := config.LoadConfig()
+	if proxyServerAddr != "" {
+		conf.ProxyServerAddr = proxyServerAddr
+	}
+
 	mem := memory.MemBuff{}
 	mem.InitStruct()
 	//mem := memory.MemoryFmt{}
 
-	conf, _ := config.LoadConfig()
 	iotDev := iot.IoTDevice{}
 	iotDev.Init(conf.IoTsDevices[0])
 
