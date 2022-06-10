@@ -15,6 +15,7 @@ type Controller struct {
 
 func (c *Controller) InitStruct(config config.Config,
 	mem memory.Memory, ioTsController IoTsController) {
+	c.ioTsController = ioTsController
 	c.mem = mem
 }
 
