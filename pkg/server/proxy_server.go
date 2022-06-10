@@ -16,6 +16,7 @@ type Server struct {
 
 func (s *Server) getInformationFromIotDevice(w http.ResponseWriter, r *http.Request) {
 	log.Println("handler getInformationFromIotDevice")
+	defer r.Body.Close()
 	deviceNames := r.URL.Query()["deviceName"]
 	if len(deviceNames) == 0 {
 		log.Println("device name not found")
@@ -41,6 +42,7 @@ func (s *Server) getInformationFromIotDevice(w http.ResponseWriter, r *http.Requ
 
 func (s *Server) addIotDevice(w http.ResponseWriter, r *http.Request) {
 	log.Println("handler addIotDevice")
+	defer r.Body.Close()
 	deviceNames := r.URL.Query()["deviceName"]
 	if len(deviceNames) == 0 {
 		log.Println("device name not found")
@@ -69,6 +71,7 @@ func (s *Server) addIotDevice(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) removeIotDevice(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	log.Println("handler removeIotDevice")
 	deviceNames := r.URL.Query()["deviceName"]
 	if len(deviceNames) == 0 {
@@ -87,6 +90,7 @@ func (s *Server) removeIotDevice(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) getLogs(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	log.Println("handler getLogs")
 	countLogsArr := r.URL.Query()["countLogs"]
 	if len(countLogsArr) == 0 {
