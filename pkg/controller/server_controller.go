@@ -13,7 +13,8 @@ type Controller struct {
 	ioTsController IoTsController
 }
 
-func (c *Controller) InitStruct(config config.Config, mem memory.Memory) {
+func (c *Controller) InitStruct(config config.Config,
+	mem memory.Memory, ioTsController IoTsController) {
 	c.mem = mem
 }
 
