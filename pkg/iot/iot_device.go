@@ -77,6 +77,7 @@ func (d *IoTDevice) ObserveInform(save func([]byte, message.MediaType) error) er
 			log.Println(err)
 			return
 		}
+		buff = append(buff, []byte("\n")...) // mb move to save func?
 		if err := save(buff, infType); err != nil {
 			log.Println(err)
 			return
