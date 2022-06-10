@@ -122,6 +122,8 @@ func (s *Server) StartServer(config config.Config, controller controller.Control
 	s.controller = controller
 
 	http.HandleFunc("/device/metrics", s.getInformationFromIotDevice)
+	http.HandleFunc("/device/add", s.addIotDevice)
+	http.HandleFunc("/device/rm", s.removeIotDevice)
 	http.HandleFunc("/logs", s.getLogs)
 
 	fmt.Println("Server is listening... ", config.ProxyServerAddr)
