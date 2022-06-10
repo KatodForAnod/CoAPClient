@@ -1,8 +1,14 @@
 package config
 
+import (
+	"encoding/json"
+	"io/ioutil"
+	"log"
+)
+
 type Config struct {
 	ProxyServerAddr string      `json:"proxy_server_addr"`
-	IoTsDevices     []IotConfig `json:"io_ts_devices"`
+	IoTsDevices     []IotConfig `json:"iots_devices"`
 }
 
 type IotConfig struct {
@@ -10,12 +16,20 @@ type IotConfig struct {
 	Name string `json:"name"`
 }
 
-func LoadConfig() (Config, error) {
-	conf := Config{IoTsDevices: []IotConfig{{
+const configPath = "conf.config"
+
+func LoadConfig() (loadedConf Config, err error) {
+	/*conf := Config{IoTsDevices: []IotConfig{{
 		Addr: "localhost:5688",
 		Name: "testDevice",
 	}},
-		ProxyServerAddr: "localhost:8000"}
+		ProxyServerAddr: "localhost:8000"}*/
+	data, err := ioutil.ReadFile(configPath)
+	if err != nil {
+		log.Println(err)
+		return Config{}, err
+	}
 
-	return conf, nil
+	err = json.Unmarshal(data, &loadedConf)
+	return
 }
