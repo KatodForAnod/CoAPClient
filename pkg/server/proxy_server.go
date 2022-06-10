@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"CoAPProxyServer/pkg/config"
@@ -122,5 +122,8 @@ func (s *Server) StartServer(config config.Config, controller controller.Control
 	s.controller = controller
 
 	http.HandleFunc("/device/metrics", s.getInformationFromIotDevice)
+	http.HandleFunc("/logs", s.getLogs)
+
+	fmt.Println("Server is listening... ", config.ProxyServerAddr)
 	log.Fatal(http.ListenAndServe(config.ProxyServerAddr, nil))
 }
