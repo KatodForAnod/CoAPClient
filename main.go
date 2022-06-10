@@ -4,14 +4,23 @@ import (
 	"CoAPProxyServer/pkg/config"
 	"CoAPProxyServer/pkg/controller"
 	"CoAPProxyServer/pkg/iot"
+	"CoAPProxyServer/pkg/logsetting"
 	"CoAPProxyServer/pkg/memory"
+	serv "CoAPProxyServer/pkg/server"
+	"log"
 	"time"
 )
 
 func main() {
-	//mem := memory.MemBuff{}
-	//mem.InitStruct("test.txt")
-	mem := memory.MemoryFmt{}
+	log.SetFlags(log.Lshortfile)
+	er := logsetting.LogInit()
+	if er != nil {
+		log.Fatalln(er)
+	}
+
+	mem := memory.MemBuff{}
+	mem.InitStruct()
+	//mem := memory.MemoryFmt{}
 
 	conf, _ := config.LoadConfig()
 	iotDev := iot.IoTDevice{}
@@ -25,9 +34,16 @@ func main() {
 	iotController.AddIoTs(arr)
 
 	iotController.StartInformationCollect()
-	time.Sleep(time.Second * 8)
-	//mem.FlushToFile()
 
+	controll := controller.Controller{}
+	server := serv.Server{}
+
+	controll.InitStruct(conf, &mem, iotController)
+	server.StartServer(conf, controll)
+	return
+
+	//time.Sleep(time.Second * 8)
+	//mem.FlushToFile(conf.IoTsDevices[0].Name)
 	iotController.StopInformationCollect()
 	time.Sleep(time.Second * 4)
 	iotController.StartInformationCollect()
