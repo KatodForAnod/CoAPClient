@@ -1,0 +1,124 @@
+{
+  "info": {
+    "_postman_id": "611824cb-347c-4296-afeb-58721e354a9a",
+    "name": "proxy_server_api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "get_last_nlogs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "127.0.0.1:8000/logs?countLogs=50",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "logs"
+          ],
+          "query": [
+            {
+              "key": "countLogs",
+              "value": "50"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_iot_metrics",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "127.0.0.1:8000/device/metrics?deviceName=testDevice",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "device",
+            "metrics"
+          ],
+          "query": [
+            {
+              "key": "deviceName",
+              "value": "testDevice"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "add_iot_device",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "127.0.0.1:8000/device/add?deviceName=testDevice&deviceAddr=localhost:5688",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "device",
+            "add"
+          ],
+          "query": [
+            {
+              "key": "deviceName",
+              "value": "testDevice"
+            },
+            {
+              "key": "deviceAddr",
+              "value": "localhost:5688"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "rm_iot_device",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "127.0.0.1:8000/device/rm?deviceName=testDevice",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "device",
+            "rm"
+          ],
+          "query": [
+            {
+              "key": "deviceName",
+              "value": "testDevice"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
