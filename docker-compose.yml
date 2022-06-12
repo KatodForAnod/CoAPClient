@@ -1,0 +1,12 @@
+version: '3'
+services:
+  iotdev1:
+    ports:
+      - "5688:5688/udp"
+    build: iotsDevicesImitation/.
+  proxy_server:
+    depends_on:
+      - iotdev1
+    ports:
+      - "8000:8000"
+    build: .
