@@ -6,6 +6,7 @@ services:
     build: iotsDevicesImitation/.
     environment:
       - port=5688
+      - inftype=-time
   proxy_server:
     depends_on:
       - iotdev1
