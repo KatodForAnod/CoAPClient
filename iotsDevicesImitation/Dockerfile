@@ -6,4 +6,4 @@ RUN git clone https://github.com/KatodForAnod/CoAPServer.git && \
     cd CoAPServer && \
     go mod tidy && \
     go build gocoaplib/iotemulatelite.go
-CMD ["/app/CoAPServer/iotemulatelite"]
+CMD ["sh", "-c", "/app/CoAPServer/iotemulatelite -port ${port}"]

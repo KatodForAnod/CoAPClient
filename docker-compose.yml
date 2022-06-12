@@ -4,6 +4,8 @@ services:
     ports:
       - "5688:5688/udp"
     build: iotsDevicesImitation/.
+    environment:
+      - port=5688
   proxy_server:
     depends_on:
       - iotdev1
