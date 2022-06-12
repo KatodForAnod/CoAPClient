@@ -2,7 +2,7 @@ FROM golang:latest
 RUN apt-get update
 RUN apt-get install git -y
 WORKDIR /app
-RUN git clone https://github.com/KatodForAnod/CoAPServer.git --branch v1.0.0 && \
+RUN git clone https://github.com/KatodForAnod/CoAPIoTDevice.git --branch v1.0.0 && \
     cd CoAPServer && \
     go mod tidy && \
     go build gocoaplib/iotemulatelite.go
