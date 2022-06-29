@@ -16,7 +16,7 @@ type IotConfig struct {
 	Name string `json:"name"`
 }
 
-const configPath = "conf.config"
+var configPath = "conf.config"
 
 func LoadConfig() (loadedConf Config, err error) {
 	/*conf := Config{IoTsDevices: []IotConfig{{
