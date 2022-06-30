@@ -11,7 +11,7 @@ import (
 )
 
 type Server struct {
-	controller controller.Controller
+	controller controller.ServerController
 }
 
 func (s *Server) getInformationFromIotDevice(w http.ResponseWriter, r *http.Request) {
@@ -122,7 +122,7 @@ func (s *Server) getLogs(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *Server) StartServer(config config.Config, controller controller.Controller) {
+func (s *Server) StartServer(config config.Config, controller controller.ServerController) {
 	s.controller = controller
 
 	http.HandleFunc("/device/metrics", s.getInformationFromIotDevice)
