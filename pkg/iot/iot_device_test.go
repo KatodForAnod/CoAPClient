@@ -10,17 +10,10 @@ import (
 
 var iotDev IoTDevice
 
-func createDockerContainerWithIotDevice(t *testing.T) {
-
-}
-
 func TestIoTDevice_Init(t *testing.T) {
 	iotDev = IoTDevice{}
-
-	//createDockerContainerWithIotDevice
-
 	conf := config.IotConfig{
-		Addr: "123:8080",
+		Addr: ":5688",
 		Name: "testDevice",
 	}
 	iotDev.Init(conf)
