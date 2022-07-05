@@ -3,8 +3,10 @@ package server
 import (
 	"CoAPProxyServer/pkg/config"
 	"errors"
+	"log"
 	"net/http"
 	"net/http/httptest"
+	"os/exec"
 	"strings"
 	"testing"
 )
@@ -46,12 +48,33 @@ func (c *Controller) GetInformation(deviceName string) ([]byte, error) {
 }
 
 func Init() {
+	cmd := exec.Command("docker", "build", "../../iotsDevicesImitation/.", "-t", "test_iot")
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	cmd = exec.Command("docker", "run",
+		"--rm", "-d", "-e", "port=5688", "-e", "inftype=-time", "--name", "test_iot", "test_iot")
+	err = cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	controller := Controller{}
-	proxyServer.StartServer(config.Config{ProxyServerAddr: serverAddr}, &controller)
+	go proxyServer.StartServer(config.Config{ProxyServerAddr: serverAddr}, &controller)
+}
+
+func ShoutDown() {
+	cmd := exec.Command("docker", "stop", "test_iot")
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func TestServer_addIotDevice(t *testing.T) {
-	go Init()
+	Init() // start only once
 	req := httptest.NewRequest(http.MethodGet, "/device/add?deviceName=testName&deviceAddr=:5600", nil)
 	w := httptest.NewRecorder()
 	proxyServer.addIotDevice(w, req)
@@ -188,6 +211,7 @@ func TestServer_getLogsFail2(t *testing.T) {
 }
 
 func TestServer_getLogsFail3(t *testing.T) {
+	ShoutDown()
 	req := httptest.NewRequest(http.MethodGet, "/logs?countLogs=-2", nil)
 	w := httptest.NewRecorder()
 	proxyServer.getLogs(w, req)
