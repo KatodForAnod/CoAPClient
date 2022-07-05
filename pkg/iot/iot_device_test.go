@@ -4,11 +4,29 @@ import (
 	"CoAPProxyServer/pkg/config"
 	"context"
 	"github.com/plgd-dev/go-coap/v2/message"
+	"log"
+	"os/exec"
 	"testing"
 	"time"
 )
 
 var iotDev IoTDevice
+
+func TestInit(t *testing.T) {
+	cmd := exec.Command("docker", "build", "../../iotsDevicesImitation/.", "-t", "test_iot")
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	cmd = exec.Command("docker", "run",
+		"--rm", "-d", "-e", "port=5688", "-e", "inftype=-time", "-p", "5688:5688/udp",
+		"--name", "test_iot", "test_iot")
+	err = cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 func TestIoTDevice_Init(t *testing.T) {
 	iotDev = IoTDevice{}
@@ -82,6 +100,14 @@ func TestIoTDevice_Disconnect(t *testing.T) {
 	err := iotDev.Disconnect()
 	if err != nil {
 		t.Errorf("function Disconnect() is corrupted: unexpected error: %s", err)
+	}
+}
+
+func TestShoutDown(t *testing.T) {
+	cmd := exec.Command("docker", "stop", "test_iot")
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 

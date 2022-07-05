@@ -3,10 +3,8 @@ package server
 import (
 	"CoAPProxyServer/pkg/config"
 	"errors"
-	"log"
 	"net/http"
 	"net/http/httptest"
-	"os/exec"
 	"strings"
 	"testing"
 )
@@ -48,7 +46,7 @@ func (c *Controller) GetInformation(deviceName string) ([]byte, error) {
 }
 
 func Init() {
-	cmd := exec.Command("docker", "build", "../../iotsDevicesImitation/.", "-t", "test_iot")
+	/*cmd := exec.Command("docker", "build", "../../iotsDevicesImitation/.", "-t", "test_iot")
 	err := cmd.Run()
 	if err != nil {
 		log.Fatal(err)
@@ -59,18 +57,18 @@ func Init() {
 	err = cmd.Run()
 	if err != nil {
 		log.Fatal(err)
-	}
+	}*/
 
 	controller := Controller{}
 	go proxyServer.StartServer(config.Config{ProxyServerAddr: serverAddr}, &controller)
 }
 
 func ShoutDown() {
-	cmd := exec.Command("docker", "stop", "test_iot")
+	/*cmd := exec.Command("docker", "stop", "test_iot")
 	err := cmd.Run()
 	if err != nil {
 		log.Fatal(err)
-	}
+	}*/
 }
 
 func TestServer_addIotDevice(t *testing.T) {
