@@ -54,19 +54,71 @@ func TestServer_addIotDevice(t *testing.T) {
 	go Init()
 	req := httptest.NewRequest(http.MethodGet, "/device/add?deviceName=testName&deviceAddr=:5600", nil)
 	w := httptest.NewRecorder()
-	proxyServer.getLogs(w, req)
+	proxyServer.addIotDevice(w, req)
 
 	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
 		t.Fatalf("expected a %d, instead got: %d", want, got)
 	}
 }
 
+func TestServer_addIotDeviceFail(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/device/add?deviceAddr=:5600", nil)
+	w := httptest.NewRecorder()
+	proxyServer.addIotDevice(w, req)
+
+	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
+		t.Fatalf("expected a %d, instead got: %d", want, got)
+	}
+
+	if w.Body.String() == "" {
+		t.Fatalf("expected warning msg")
+	}
+}
+
+func TestServer_addIotDeviceFail2(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/device/add?deviceAddr=:5600", nil)
+	w := httptest.NewRecorder()
+	proxyServer.addIotDevice(w, req)
+
+	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
+		t.Fatalf("expected a %d, instead got: %d", want, got)
+	}
+
+	if w.Body.String() == "" {
+		t.Fatalf("expected warning msg")
+	}
+}
+
 func TestServer_getInformationFromIotDevice(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/device/metrics?deviceName=testName", nil)
 	w := httptest.NewRecorder()
-	proxyServer.getLogs(w, req)
+	proxyServer.getInformationFromIotDevice(w, req)
 
 	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
+		t.Fatalf("expected a %d, instead got: %d", want, got)
+	}
+}
+
+func TestServer_getInformationFromIotDeviceFail(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/device/metrics?", nil)
+	w := httptest.NewRecorder()
+	proxyServer.getInformationFromIotDevice(w, req)
+
+	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
+		t.Fatalf("expected a %d, instead got: %d", want, got)
+	}
+
+	if w.Body.String() == "" {
+		t.Fatalf("expected warning msg")
+	}
+}
+
+func TestServer_getInformationFromIotDeviceFail2(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/device/metrics?deviceName=wrongName", nil)
+	w := httptest.NewRecorder()
+	proxyServer.getInformationFromIotDevice(w, req)
+
+	if want, got := http.StatusInternalServerError, w.Result().StatusCode; want != got {
 		t.Fatalf("expected a %d, instead got: %d", want, got)
 	}
 }
@@ -74,10 +126,24 @@ func TestServer_getInformationFromIotDevice(t *testing.T) {
 func TestServer_removeIotDevice(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/device/rm?deviceName=testName", nil)
 	w := httptest.NewRecorder()
-	proxyServer.getLogs(w, req)
+	proxyServer.removeIotDevice(w, req)
 
 	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
 		t.Fatalf("expected a %d, instead got: %d", want, got)
+	}
+}
+
+func TestServer_removeIotDeviceFail(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/device/rm?", nil)
+	w := httptest.NewRecorder()
+	proxyServer.removeIotDevice(w, req)
+
+	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
+		t.Fatalf("expected a %d, instead got: %d", want, got)
+	}
+
+	if w.Body.String() == "" {
+		t.Fatalf("expected warning msg")
 	}
 }
 
@@ -94,5 +160,39 @@ func TestServer_getLogs(t *testing.T) {
 	outArr := strings.Split(out, "\n")
 	if len(outArr) < 2 {
 		t.FailNow()
+	}
+}
+
+func TestServer_getLogsFail(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/logs?", nil)
+	w := httptest.NewRecorder()
+	proxyServer.getLogs(w, req)
+
+	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
+		t.Fatalf("expected a %d, instead got: %d", want, got)
+	}
+
+	if w.Body.String() == "" {
+		t.Fatalf("expected warning msg")
+	}
+}
+
+func TestServer_getLogsFail2(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/logs?countLogs=q", nil)
+	w := httptest.NewRecorder()
+	proxyServer.getLogs(w, req)
+
+	if want, got := http.StatusInternalServerError, w.Result().StatusCode; want != got {
+		t.Fatalf("expected a %d, instead got: %d", want, got)
+	}
+}
+
+func TestServer_getLogsFail3(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/logs?countLogs=-2", nil)
+	w := httptest.NewRecorder()
+	proxyServer.getLogs(w, req)
+
+	if want, got := http.StatusInternalServerError, w.Result().StatusCode; want != got {
+		t.Fatalf("expected a %d, instead got: %d", want, got)
 	}
 }
