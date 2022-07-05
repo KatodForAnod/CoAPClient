@@ -182,7 +182,7 @@ func TestServer_getLogs(t *testing.T) {
 	out := w.Body.String()
 	outArr := strings.Split(out, "\n")
 	if len(outArr) < 2 {
-		t.FailNow()
+		t.Fatalf("expected len %d, instead got: %d", 2, len(outArr))
 	}
 }
 
