@@ -42,7 +42,7 @@ func TestIoTDeviceInit(t *testing.T) {
 	}
 }
 
-func TestIoTDevice_GetId(t *testing.T) {
+func TestIoTDeviceGetId(t *testing.T) {
 	if iotDev.GetId() != 0 {
 		t.Error("wrong id param")
 	}
@@ -52,6 +52,17 @@ func TestIoTDeviceGetName(t *testing.T) {
 	if iotDev.GetName() != "testDevice" {
 		t.Error("unexpected return value")
 	}
+}
+
+func TestIoTDeviceConnectFail(t *testing.T) {
+	tmp := iotDev.addr
+	iotDev.addr = "-1"
+
+	err := iotDev.Connect()
+	if err == nil {
+		t.Error("func Connect() in that case should return error")
+	}
+	iotDev.addr = tmp
 }
 
 func TestIoTDeviceConnect(t *testing.T) {
@@ -66,6 +77,31 @@ func TestIoTDevicePing(t *testing.T) {
 
 	if err := iotDev.Ping(ctx); err != nil {
 		t.Errorf("function Ping() is corrupted: unexpected error: %s", err)
+	}
+}
+
+func TestIoTDevicePingNilConnection(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	tmp := iotDev.conn
+	iotDev.conn = nil
+
+	err := iotDev.Ping(ctx)
+	if err == nil {
+		t.Error("func Ping() in that case should return error")
+	}
+
+	iotDev.conn = tmp
+}
+
+func TestIoTDevicePingCtx(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Nanosecond)
+	defer cancel()
+
+	err := iotDev.Ping(ctx)
+	if err == nil {
+		t.Error("func Ping() in that case should return error")
 	}
 }
 
@@ -91,7 +127,7 @@ func TestIoTDeviceStopObserveInform(t *testing.T) {
 	}
 }
 
-func TestIoTDeviceIsObserveInformProcess2(t *testing.T) {
+func TestIoTDeviceIsObserveInformProcessStop(t *testing.T) {
 	isProcess := iotDev.IsObserveInformProcess()
 	if isProcess {
 		t.Errorf("function IsObserveInformProcess() is corrupted: unexpected returned value")
