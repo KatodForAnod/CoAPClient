@@ -37,8 +37,10 @@ func (c *Controller) RemoveIoTDeviceObserve(ioTsConfig []config.IotConfig) error
 }
 
 func (c *Controller) NewIotDeviceObserve(iotConfig config.IotConfig) error {
-	if iotConfig.Addr == "" || iotConfig.Name == "" {
-		return errors.New("wrong params")
+	for _, t := range c.ioTs {
+		if t.Name == iotConfig.Name {
+			return errors.New("device with such name already exist")
+		}
 	}
 
 	c.ioTs = append(c.ioTs, iotConfig)
@@ -71,8 +73,8 @@ func TestServerAddIotDevice(t *testing.T) {
 	}
 }
 
-func TestServerAddIotEmptyAllParams(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "/device/add?deviceName=&deviceAddr=", nil)
+func TestServerAddIotDeviceFail(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/device/add?deviceName=testName&deviceAddr=:5600", nil)
 	w := httptest.NewRecorder()
 	proxyServer.addIotDevice(w, req)
 
