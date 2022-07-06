@@ -46,7 +46,7 @@ func deleteConfig(t *testing.T) error {
 	return nil
 }
 
-func TestLoadConfig_Success(t *testing.T) {
+func TestLoadConfigSuccess(t *testing.T) {
 	err := createConfig(t)
 	if err != nil {
 		t.Error(err)
@@ -88,7 +88,7 @@ func TestLoadConfig_Success(t *testing.T) {
 	}
 }
 
-func TestLoadConfig_Fail(t *testing.T) {
+func TestLoadConfigFail(t *testing.T) {
 	configPath = "notExist.txt"
 	_, err := LoadConfig()
 	if err == nil {
