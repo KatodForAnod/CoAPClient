@@ -16,7 +16,7 @@ func TestInit(t *testing.T) {
 	cmd := exec.Command("docker", "build", "../../iotsDevicesImitation/.", "-t", "test_iot")
 	err := cmd.Run()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("unexpected error %s. P.s. for this tests need docker", err)
 	}
 
 	cmd = exec.Command("docker", "run",
@@ -24,7 +24,7 @@ func TestInit(t *testing.T) {
 		"--name", "test_iot", "test_iot")
 	err = cmd.Run()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("unexpected error %s. P.s. for this tests need docker", err)
 	}
 }
 
