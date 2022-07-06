@@ -12,13 +12,12 @@ import (
 func (s *Server) getInformationFromIotDevice(w http.ResponseWriter, r *http.Request) {
 	log.Println("handler getInformationFromIotDevice")
 	defer r.Body.Close()
-	deviceNames := r.URL.Query()["deviceName"]
-	if len(deviceNames) == 0 {
+	deviceName := r.URL.Query().Get("deviceName")
+	if deviceName == "" {
 		log.Errorln("device name not found")
 		fmt.Fprintf(w, "set device name")
 		return
 	}
-	deviceName := deviceNames[0]
 
 	inf, err := s.controller.GetInformation(deviceName)
 	if err != nil {
@@ -38,21 +37,19 @@ func (s *Server) getInformationFromIotDevice(w http.ResponseWriter, r *http.Requ
 func (s *Server) addIotDevice(w http.ResponseWriter, r *http.Request) {
 	log.Println("handler addIotDevice")
 	defer r.Body.Close()
-	deviceNames := r.URL.Query()["deviceName"]
-	if len(deviceNames) == 0 {
+	deviceName := r.URL.Query().Get("deviceName")
+	if deviceName == "" {
 		log.Errorln("device name not found")
 		fmt.Fprintf(w, "set device name")
 		return
 	}
 
-	deviceAddrs := r.URL.Query()["deviceAddr"]
-	if len(deviceAddrs) == 0 {
+	deviceAddr := r.URL.Query().Get("deviceAddr")
+	if deviceAddr == "" {
 		log.Errorln("device addr not found")
 		fmt.Fprintf(w, "set device addr")
 		return
 	}
-	deviceName := deviceNames[0]
-	deviceAddr := deviceAddrs[0]
 
 	err := s.controller.NewIotDeviceObserve(config.IotConfig{
 		Addr: deviceAddr,
@@ -68,13 +65,12 @@ func (s *Server) addIotDevice(w http.ResponseWriter, r *http.Request) {
 func (s *Server) removeIotDevice(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	log.Println("handler removeIotDevice")
-	deviceNames := r.URL.Query()["deviceName"]
-	if len(deviceNames) == 0 {
+	deviceName := r.URL.Query().Get("deviceName")
+	if deviceName == "" {
 		log.Errorln("device name not found")
 		fmt.Fprintf(w, "set device name")
 		return
 	}
-	deviceName := deviceNames[0]
 
 	err := s.controller.RemoveIoTDeviceObserve([]config.IotConfig{{Name: deviceName}})
 	if err != nil {
@@ -87,21 +83,20 @@ func (s *Server) removeIotDevice(w http.ResponseWriter, r *http.Request) {
 func (s *Server) getLogs(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	log.Println("handler getLogs")
-	countLogsArr := r.URL.Query()["countLogs"]
-	if len(countLogsArr) == 0 {
+	countLogs := r.URL.Query().Get("countLogs")
+	if countLogs == "" {
 		log.Errorln("count logs not found")
 		fmt.Fprintf(w, "set count logs")
 		return
 	}
-	countLogsStr := countLogsArr[0]
-	countLogs, err := strconv.Atoi(countLogsStr)
+	countLogsInt, err := strconv.Atoi(countLogs)
 	if err != nil {
 		log.Errorln(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	logs, err := s.controller.GetLastNRowsLogs(countLogs)
+	logs, err := s.controller.GetLastNRowsLogs(countLogsInt)
 	if err != nil {
 		log.Errorln(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
