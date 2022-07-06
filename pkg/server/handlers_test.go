@@ -27,10 +27,20 @@ func (c *Controller) GetLastNRowsLogs(nRows int) ([]string, error) {
 }
 
 func (c *Controller) RemoveIoTDeviceObserve(ioTsConfig []config.IotConfig) error {
-	return nil
+	for _, t := range c.ioTs {
+		if t.Name == ioTsConfig[0].Name {
+			return nil
+		}
+	}
+
+	return errors.New("device not found")
 }
 
 func (c *Controller) NewIotDeviceObserve(iotConfig config.IotConfig) error {
+	if iotConfig.Addr == "" || iotConfig.Name == "" {
+		return errors.New("wrong params")
+	}
+
 	c.ioTs = append(c.ioTs, iotConfig)
 	return nil
 }
@@ -61,8 +71,32 @@ func TestServerAddIotDevice(t *testing.T) {
 	}
 }
 
+func TestServerAddIotEmptyAllParams(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/device/add?deviceName=&deviceAddr=", nil)
+	w := httptest.NewRecorder()
+	proxyServer.addIotDevice(w, req)
+
+	if want, got := http.StatusInternalServerError, w.Result().StatusCode; want != got {
+		t.Fatalf("expected a %d, instead got: %d", want, got)
+	}
+}
+
 func TestServerAddIotDeviceEmptyDeviceName(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/device/add?deviceAddr=:5600", nil)
+	w := httptest.NewRecorder()
+	proxyServer.addIotDevice(w, req)
+
+	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
+		t.Fatalf("expected a %d, instead got: %d", want, got)
+	}
+
+	if w.Body.String() == "" {
+		t.Fatalf("expected warning msg")
+	}
+}
+
+func TestServerAddIotDeviceEmptyDeviceAddr(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/device/add?deviceName=testName", nil)
 	w := httptest.NewRecorder()
 	proxyServer.addIotDevice(w, req)
 
@@ -115,6 +149,16 @@ func TestServerRemoveIotDevice(t *testing.T) {
 	proxyServer.removeIotDevice(w, req)
 
 	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
+		t.Fatalf("expected a %d, instead got: %d", want, got)
+	}
+}
+
+func TestServerRemoveIotDeviceFailNotFound(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/device/rm?deviceName=notFound", nil)
+	w := httptest.NewRecorder()
+	proxyServer.removeIotDevice(w, req)
+
+	if want, got := http.StatusInternalServerError, w.Result().StatusCode; want != got {
 		t.Fatalf("expected a %d, instead got: %d", want, got)
 	}
 }
