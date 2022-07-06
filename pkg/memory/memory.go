@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/plgd-dev/go-coap/v2/message"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"os"
 )
 
@@ -60,7 +60,7 @@ func (b *MemBuff) Load(nameDevice string) ([]byte, error) {
 	buff, isExist := b.buffers[nameDevice]
 	if !isExist {
 		err := errors.New("not found")
-		log.Println(err)
+		log.Errorln(err)
 		return []byte{}, err
 	}
 
@@ -71,19 +71,19 @@ func (b *MemBuff) FlushToFile(nameDevice string) error {
 	log.Println("fluash to file in membuff")
 	file, err := os.Create(nameDevice + ".txt") // if already exist??
 	if err != nil {
-		log.Println(err)
+		log.Errorln(err)
 		return err
 	}
 
 	buff, isExist := b.buffers[nameDevice]
 	if !isExist {
 		err := errors.New("not found")
-		log.Println(err)
+		log.Errorln(err)
 		return err
 	}
 	_, err = file.Write(buff)
 	if err != nil {
-		log.Println(err)
+		log.Errorln(err)
 		return err
 	}
 	b.buffers[nameDevice] = []byte{}

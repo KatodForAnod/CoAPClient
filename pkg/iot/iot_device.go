@@ -41,12 +41,12 @@ func (d *IoTDevice) Ping(ctx context.Context) error {
 	log.Println("ping iot", d.name, "device")
 	if d.conn == nil {
 		err := errors.New("nil connection if iot " + d.name)
-		log.Println(err)
+		log.Errorln(err)
 		return err
 	}
 
 	if err := d.conn.Ping(ctx); err != nil {
-		log.Println(err)
+		log.Errorln(err)
 		return err
 	}
 
@@ -63,23 +63,23 @@ func (d *IoTDevice) ObserveInform(save func([]byte, message.MediaType) error) er
 		log.Printf("Got %+v\n", req)
 		size, err := req.BodySize()
 		if err != nil {
-			log.Println(err)
+			log.Errorln(err)
 			size = 300
 		}
 
 		buff := make([]byte, size)
 		if _, err := req.Body().Read(buff); err != nil {
-			log.Println(err)
+			log.Errorln(err)
 			return
 		}
 		infType, err := req.Message.ContentFormat()
 		if err != nil {
-			log.Println(err)
+			log.Errorln(err)
 			return
 		}
 		buff = append(buff, []byte("\n")...) // mb move to save func?
 		if err := save(buff, infType); err != nil {
-			log.Println(err)
+			log.Errorln(err)
 			return
 		}
 	}
@@ -106,7 +106,7 @@ func (d *IoTDevice) StopObserveInform() error {
 	defer cancel()
 
 	if err := d.observe.Cancel(ctx); err != nil {
-		log.Println(err)
+		log.Errorln(err)
 		return err
 	}
 	return nil
@@ -120,7 +120,7 @@ func (d *IoTDevice) Connect() error {
 	log.Println("connecting to iot", d.name)
 	conn, err := udp.Dial(d.addr)
 	if err != nil {
-		log.Printf("Error dialing: %v\n", err)
+		log.Errorf("Error dialing: %v\n", err)
 		return err
 	}
 
@@ -132,7 +132,7 @@ func (d *IoTDevice) Disconnect() error {
 	log.Println("disconnecting from iot", d.name)
 	err := d.conn.Close()
 	if err != nil {
-		log.Println(err)
+		log.Errorln(err)
 		return err
 	}
 

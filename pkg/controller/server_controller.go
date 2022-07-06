@@ -24,7 +24,7 @@ func (c *Controller) GetInformation(deviceName string) ([]byte, error) {
 
 	load, err := c.mem.Load(deviceName)
 	if err != nil {
-		log.Println(err)
+		log.Errorln(err)
 		return []byte{}, err
 	}
 
@@ -40,13 +40,13 @@ func (c *Controller) NewIotDeviceObserve(iotConfig config.IotConfig) error {
 
 	err := c.ioTsController.AddIoTs(arr)
 	if err != nil {
-		log.Println(err)
+		log.Errorln(err)
 		return err
 	}
 
 	err = c.ioTsController.StartInformationCollect()
 	if err != nil {
-		log.Println(err)
+		log.Errorln(err)
 		return err
 	}
 
@@ -63,13 +63,13 @@ func (c *Controller) GetLastNRowsLogs(nRows int) ([]string, error) {
 	log.Println("controller get lastNRowsLogs")
 	file, err := logsetting.OpenLastLogFile()
 	if err != nil {
-		log.Println(err)
+		log.Errorln(err)
 		return []string{}, err
 	}
 
 	logs, err := logsetting.GetNLastLines(file, nRows)
 	if err != nil {
-		log.Println(err)
+		log.Errorln(err)
 		return []string{}, err
 	}
 

@@ -26,7 +26,7 @@ func (c *IoTsController) AddIoTs(iots []*iot.IoTDevice) error {
 	for _, device := range iots {
 		if _, isExist := c.ioTDevices[device.GetName()]; isExist {
 			err := errors.New("device " + device.GetName() + " already exist")
-			log.Println(err)
+			log.Errorln(err)
 			return err
 		}
 	}
@@ -43,11 +43,11 @@ func (c *IoTsController) RemoveIoTs(IoTsConfig []config.IotConfig) {
 		if iotDevice, isExist := c.ioTDevices[device.Name]; isExist {
 			err := iotDevice.StopObserveInform()
 			if err != nil {
-				log.Println(err)
+				log.Errorln(err)
 			}
 			err = iotDevice.Disconnect()
 			if err != nil {
-				log.Println(err)
+				log.Errorln(err)
 			}
 
 			delete(c.ioTDevices, device.Name)
@@ -62,9 +62,9 @@ func (c *IoTsController) StartInformationCollect() error {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
 		if err := device.Ping(ctx); err != nil {
-			log.Println(err)
+			log.Errorln(err)
 			if err := device.Connect(); err != nil { // when connect need restart IsObserveInformProcess
-				log.Println(err)
+				log.Errorln(err)
 				continue
 			}
 		}
@@ -75,7 +75,7 @@ func (c *IoTsController) StartInformationCollect() error {
 
 		err := device.ObserveInform(c.createSaveFunc(time.Second*2, device))
 		if err != nil {
-			log.Println(err)
+			log.Errorln(err)
 		}
 	}
 
@@ -91,7 +91,7 @@ func (c *IoTsController) StopInformationCollect() error {
 		}
 		err := device.StopObserveInform()
 		if err != nil {
-			log.Println(err)
+			log.Errorln(err)
 		}
 	}
 
@@ -109,7 +109,7 @@ func (c *IoTsController) createSaveFunc(d time.Duration,
 	return func(msg []byte, msgType message.MediaType) error {
 		timer.Reset(d)
 		if err := c.mem.Save(msg, msgType, iotDevice.GetName()); err != nil {
-			log.Println(err)
+			log.Errorln(err)
 			return err
 		}
 		return nil
