@@ -7,7 +7,7 @@ import (
 	"context"
 	"errors"
 	"github.com/plgd-dev/go-coap/v2/message"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"time"
 )
 

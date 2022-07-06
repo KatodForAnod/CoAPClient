@@ -4,7 +4,7 @@ import (
 	"CoAPProxyServer/pkg/config"
 	"context"
 	"github.com/plgd-dev/go-coap/v2/message"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"os/exec"
 	"testing"
 	"time"

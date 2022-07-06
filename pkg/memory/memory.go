@@ -69,7 +69,7 @@ func (b *MemBuff) Load(nameDevice string) ([]byte, error) {
 
 func (b *MemBuff) FlushToFile(nameDevice string) error {
 	log.Println("fluash to file in membuff")
-	file, err := os.Create(nameDevice + ".txt")
+	file, err := os.Create(nameDevice + ".txt") // if already exist??
 	if err != nil {
 		log.Println(err)
 		return err

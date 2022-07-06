@@ -7,8 +7,8 @@ import (
 	"github.com/plgd-dev/go-coap/v2/udp"
 	"github.com/plgd-dev/go-coap/v2/udp/client"
 	"github.com/plgd-dev/go-coap/v2/udp/message/pool"
+	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
-	"log"
 	"time"
 )
 

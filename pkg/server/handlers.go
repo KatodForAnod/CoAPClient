@@ -3,7 +3,7 @@ package server
 import (
 	"CoAPProxyServer/pkg/config"
 	"fmt"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
 	"strings"

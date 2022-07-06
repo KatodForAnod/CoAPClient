@@ -8,7 +8,7 @@ import (
 	"CoAPProxyServer/pkg/memory"
 	serv "CoAPProxyServer/pkg/server"
 	"flag"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"time"
 )
 
@@ -18,7 +18,6 @@ func main() {
 		"", "address of http server")
 	flag.Parse()
 
-	log.SetFlags(log.Lshortfile)
 	er := logsetting.LogInit()
 	if er != nil {
 		log.Fatalln(er)
@@ -49,7 +48,7 @@ func main() {
 	server := serv.Server{}
 
 	controll.InitStruct(conf, &mem, iotController)
-	server.StartServer(conf, controll)
+	server.StartServer(conf, &controll)
 	return
 
 	//time.Sleep(time.Second * 8)

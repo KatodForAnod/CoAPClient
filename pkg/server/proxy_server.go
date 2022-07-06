@@ -4,7 +4,7 @@ import (
 	"CoAPProxyServer/pkg/config"
 	"CoAPProxyServer/pkg/controller"
 	"fmt"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 )
 

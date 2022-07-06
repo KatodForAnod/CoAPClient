@@ -5,7 +5,7 @@ import (
 	"CoAPProxyServer/pkg/iot"
 	"CoAPProxyServer/pkg/logsetting"
 	"CoAPProxyServer/pkg/memory"
-	"log"
+	log "github.com/sirupsen/logrus"
 )
 
 type Controller struct {
