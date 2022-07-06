@@ -46,32 +46,11 @@ func (c *Controller) GetInformation(deviceName string) ([]byte, error) {
 }
 
 func Init() {
-	/*cmd := exec.Command("docker", "build", "../../iotsDevicesImitation/.", "-t", "test_iot")
-	err := cmd.Run()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	cmd = exec.Command("docker", "run",
-		"--rm", "-d", "-e", "port=5688", "-e", "inftype=-time", "--name", "test_iot", "test_iot")
-	err = cmd.Run()
-	if err != nil {
-		log.Fatal(err)
-	}*/
-
 	controller := Controller{}
 	go proxyServer.StartServer(config.Config{ProxyServerAddr: serverAddr}, &controller)
 }
 
-func ShoutDown() {
-	/*cmd := exec.Command("docker", "stop", "test_iot")
-	err := cmd.Run()
-	if err != nil {
-		log.Fatal(err)
-	}*/
-}
-
-func TestServer_addIotDevice(t *testing.T) {
+func TestServerAddIotDevice(t *testing.T) {
 	Init() // start only once
 	req := httptest.NewRequest(http.MethodGet, "/device/add?deviceName=testName&deviceAddr=:5600", nil)
 	w := httptest.NewRecorder()
@@ -82,7 +61,7 @@ func TestServer_addIotDevice(t *testing.T) {
 	}
 }
 
-func TestServer_addIotDeviceFail(t *testing.T) {
+func TestServerAddIotDeviceEmptyDeviceName(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/device/add?deviceAddr=:5600", nil)
 	w := httptest.NewRecorder()
 	proxyServer.addIotDevice(w, req)
@@ -96,21 +75,7 @@ func TestServer_addIotDeviceFail(t *testing.T) {
 	}
 }
 
-func TestServer_addIotDeviceFail2(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "/device/add?deviceAddr=:5600", nil)
-	w := httptest.NewRecorder()
-	proxyServer.addIotDevice(w, req)
-
-	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
-		t.Fatalf("expected a %d, instead got: %d", want, got)
-	}
-
-	if w.Body.String() == "" {
-		t.Fatalf("expected warning msg")
-	}
-}
-
-func TestServer_getInformationFromIotDevice(t *testing.T) {
+func TestServerGetInformationFromIotDevice(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/device/metrics?deviceName=testName", nil)
 	w := httptest.NewRecorder()
 	proxyServer.getInformationFromIotDevice(w, req)
@@ -120,7 +85,7 @@ func TestServer_getInformationFromIotDevice(t *testing.T) {
 	}
 }
 
-func TestServer_getInformationFromIotDeviceFail(t *testing.T) {
+func TestServerGetInformationFromIotDeviceFail(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/device/metrics?", nil)
 	w := httptest.NewRecorder()
 	proxyServer.getInformationFromIotDevice(w, req)
@@ -134,7 +99,7 @@ func TestServer_getInformationFromIotDeviceFail(t *testing.T) {
 	}
 }
 
-func TestServer_getInformationFromIotDeviceFail2(t *testing.T) {
+func TestServerGetInformationFromIotDeviceFail2(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/device/metrics?deviceName=wrongName", nil)
 	w := httptest.NewRecorder()
 	proxyServer.getInformationFromIotDevice(w, req)
@@ -144,7 +109,7 @@ func TestServer_getInformationFromIotDeviceFail2(t *testing.T) {
 	}
 }
 
-func TestServer_removeIotDevice(t *testing.T) {
+func TestServerRemoveIotDevice(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/device/rm?deviceName=testName", nil)
 	w := httptest.NewRecorder()
 	proxyServer.removeIotDevice(w, req)
@@ -154,7 +119,7 @@ func TestServer_removeIotDevice(t *testing.T) {
 	}
 }
 
-func TestServer_removeIotDeviceFail(t *testing.T) {
+func TestServerRemoveIotDeviceFail(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/device/rm?", nil)
 	w := httptest.NewRecorder()
 	proxyServer.removeIotDevice(w, req)
@@ -168,7 +133,7 @@ func TestServer_removeIotDeviceFail(t *testing.T) {
 	}
 }
 
-func TestServer_getLogs(t *testing.T) {
+func TestServerGetLogs(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/logs?countLogs=2", nil)
 	w := httptest.NewRecorder()
 	proxyServer.getLogs(w, req)
@@ -184,7 +149,7 @@ func TestServer_getLogs(t *testing.T) {
 	}
 }
 
-func TestServer_getLogsFail(t *testing.T) {
+func TestServerGetLogsEmptyCount(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/logs?", nil)
 	w := httptest.NewRecorder()
 	proxyServer.getLogs(w, req)
@@ -198,7 +163,7 @@ func TestServer_getLogsFail(t *testing.T) {
 	}
 }
 
-func TestServer_getLogsFail2(t *testing.T) {
+func TestServerGetLogsFailLetterCount(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/logs?countLogs=q", nil)
 	w := httptest.NewRecorder()
 	proxyServer.getLogs(w, req)
@@ -208,8 +173,7 @@ func TestServer_getLogsFail2(t *testing.T) {
 	}
 }
 
-func TestServer_getLogsFail3(t *testing.T) {
-	ShoutDown()
+func TestServerGetLogsFailNegativeCount(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/logs?countLogs=-2", nil)
 	w := httptest.NewRecorder()
 	proxyServer.getLogs(w, req)
