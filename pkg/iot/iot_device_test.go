@@ -12,7 +12,7 @@ import (
 
 var iotDev IoTDevice
 
-func TestInit(t *testing.T) {
+func TestDockerInit(t *testing.T) {
 	cmd := exec.Command("docker", "build", "../../iotsDevicesImitation/.", "-t", "test_iot")
 	err := cmd.Run()
 	if err != nil {
@@ -28,7 +28,7 @@ func TestInit(t *testing.T) {
 	}
 }
 
-func TestIoTDevice_Init(t *testing.T) {
+func TestIoTDeviceInit(t *testing.T) {
 	iotDev = IoTDevice{}
 	conf := config.IotConfig{
 		Addr: ":5688",
@@ -43,22 +43,24 @@ func TestIoTDevice_Init(t *testing.T) {
 }
 
 func TestIoTDevice_GetId(t *testing.T) {
-
+	if iotDev.GetId() != 0 {
+		t.Error("wrong id param")
+	}
 }
 
-func TestIoTDevice_GetName(t *testing.T) {
+func TestIoTDeviceGetName(t *testing.T) {
 	if iotDev.GetName() != "testDevice" {
 		t.Error("unexpected return value")
 	}
 }
 
-func TestIoTDevice_Connect(t *testing.T) {
+func TestIoTDeviceConnect(t *testing.T) {
 	if err := iotDev.Connect(); err != nil {
 		t.Errorf("function Connect() is corrupted: unexpected error: %s", err)
 	}
 }
 
-func TestIoTDevice_Ping(t *testing.T) {
+func TestIoTDevicePing(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
@@ -67,7 +69,7 @@ func TestIoTDevice_Ping(t *testing.T) {
 	}
 }
 
-func TestIoTDevice_ObserveInform(t *testing.T) {
+func TestIoTDeviceObserveInform(t *testing.T) {
 	saveFunc := createSaveFunc(t)
 	err := iotDev.ObserveInform(saveFunc)
 	if err != nil {
@@ -75,28 +77,28 @@ func TestIoTDevice_ObserveInform(t *testing.T) {
 	}
 }
 
-func TestIoTDevice_IsObserveInformProcess(t *testing.T) {
+func TestIoTDeviceIsObserveInformProcess(t *testing.T) {
 	isProcess := iotDev.IsObserveInformProcess()
 	if !isProcess {
 		t.Errorf("function IsObserveInformProcess() is corrupted: unexpected returned value")
 	}
 }
 
-func TestIoTDevice_StopObserveInform(t *testing.T) {
+func TestIoTDeviceStopObserveInform(t *testing.T) {
 	err := iotDev.StopObserveInform()
 	if err != nil {
 		t.Errorf("function StopObserveInform() is corrupted: unexpected error: %s", err)
 	}
 }
 
-func TestIoTDevice_IsObserveInformProcess2(t *testing.T) {
+func TestIoTDeviceIsObserveInformProcess2(t *testing.T) {
 	isProcess := iotDev.IsObserveInformProcess()
 	if isProcess {
 		t.Errorf("function IsObserveInformProcess() is corrupted: unexpected returned value")
 	}
 }
 
-func TestIoTDevice_Disconnect(t *testing.T) {
+func TestIoTDeviceDisconnect(t *testing.T) {
 	err := iotDev.Disconnect()
 	if err != nil {
 		t.Errorf("function Disconnect() is corrupted: unexpected error: %s", err)
