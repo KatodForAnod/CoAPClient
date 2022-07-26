@@ -66,7 +66,7 @@ func (b *MemBuff) FlushToFile(nameDevice string) error {
 	log.Println("fluash to file in membuff")
 	file, err := os.Create(nameDevice + ".txt") // if already exist??
 	if err != nil {
-		return fmt.Errorf("flust to file err: %s", err.Error())
+		return fmt.Errorf("flust to file err: %v", err)
 	}
 
 	buff, isExist := b.buffers[nameDevice]
@@ -75,7 +75,7 @@ func (b *MemBuff) FlushToFile(nameDevice string) error {
 	}
 	_, err = file.Write(buff)
 	if err != nil {
-		return fmt.Errorf("file write err: %s", err.Error())
+		return fmt.Errorf("file write err: %v", err)
 	}
 	b.buffers[nameDevice] = []byte{}
 

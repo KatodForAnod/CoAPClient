@@ -26,7 +26,7 @@ func LoadConfig() (loadedConf Config, err error) {
 		ProxyServerAddr: "localhost:8000"}*/
 	data, err := ioutil.ReadFile(configPath)
 	if err != nil {
-		return Config{}, fmt.Errorf("loadconfig err:%s", err.Error())
+		return Config{}, fmt.Errorf("loadconfig err:%s", err)
 	}
 
 	err = json.Unmarshal(data, &loadedConf)

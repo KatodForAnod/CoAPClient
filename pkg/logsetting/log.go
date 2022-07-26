@@ -33,7 +33,7 @@ func LogInit() error {
 func OpenLastLogFile() (*os.File, error) {
 	fileInfo, err := ioutil.ReadDir(dirName)
 	if err != nil {
-		return nil, fmt.Errorf("openlastlogfile err: %s", err.Error())
+		return nil, fmt.Errorf("openlastlogfile err: %v", err)
 	}
 
 	sort.SliceStable(fileInfo, func(i, j int) bool {
@@ -46,7 +46,7 @@ func OpenLastLogFile() (*os.File, error) {
 
 	file, err := os.Open(dirName + "/" + fileInfo[0].Name())
 	if err != nil {
-		return nil, fmt.Errorf("openlastlogfile err: %s", err.Error())
+		return nil, fmt.Errorf("openlastlogfile err: %v", err)
 	}
 
 	return file, nil

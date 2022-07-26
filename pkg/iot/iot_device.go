@@ -44,7 +44,7 @@ func (d *IoTDevice) Ping(ctx context.Context) error {
 	}
 
 	if err := d.conn.Ping(ctx); err != nil {
-		return fmt.Errorf("ping %s iot device", err)
+		return fmt.Errorf("ping %v iot device", err)
 	}
 
 	return nil
@@ -103,7 +103,7 @@ func (d *IoTDevice) StopObserveInform() error {
 	defer cancel()
 
 	if err := d.observe.Cancel(ctx); err != nil {
-		return fmt.Errorf("iot %s device cancel err:%s", d.name, err.Error())
+		return fmt.Errorf("iot %s device cancel err:%v", d.name, err)
 	}
 	return nil
 }
@@ -127,7 +127,7 @@ func (d *IoTDevice) Disconnect() error {
 	log.Println("disconnecting from iot", d.name)
 	err := d.conn.Close()
 	if err != nil {
-		return fmt.Errorf("iot %s device disconnect err:%s", d.name, err.Error())
+		return fmt.Errorf("iot %s device disconnect err:%v", d.name, err)
 	}
 
 	return nil
