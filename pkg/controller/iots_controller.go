@@ -67,7 +67,7 @@ func (c *IoTsController) StartInformationCollect() error {
 			continue
 		}
 
-		err := device.ObserveInform(c.createSaveFunc(time.Second*2, device))
+		err := device.ObserveInform(c.createSaveFunc(device))
 		if err != nil {
 			log.Errorln(err)
 		}
@@ -90,16 +90,8 @@ func (c *IoTsController) StopInformationCollect() error {
 	return nil
 }
 
-func (c *IoTsController) createSaveFunc(d time.Duration,
-	iotDevice *iot.IoTDevice) func([]byte, message.MediaType) error {
-	timer := time.AfterFunc(d, func() {
-		if iotDevice.IsObserveInformProcess() {
-			log.Println("iot device -", iotDevice.GetName(), "not responding")
-		}
-	})
-
+func (c *IoTsController) createSaveFunc(iotDevice *iot.IoTDevice) func([]byte, message.MediaType) error {
 	return func(msg []byte, msgType message.MediaType) error {
-		timer.Reset(d)
 		if err := c.mem.Save(msg, msgType, iotDevice.GetName()); err != nil {
 			return err
 		}
