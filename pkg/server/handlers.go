@@ -2,7 +2,6 @@ package server
 
 import (
 	"CoAPProxyServer/pkg/config"
-	"fmt"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
@@ -15,7 +14,7 @@ func (s *Server) getInformationFromIotDevice(w http.ResponseWriter, r *http.Requ
 	deviceName := r.URL.Query().Get("deviceName")
 	if deviceName == "" {
 		log.Errorln("device name not found")
-		fmt.Fprintf(w, "set device name")
+		http.Error(w, "set device name", http.StatusBadRequest)
 		return
 	}
 
@@ -40,14 +39,14 @@ func (s *Server) addIotDevice(w http.ResponseWriter, r *http.Request) {
 	deviceName := r.URL.Query().Get("deviceName")
 	if deviceName == "" {
 		log.Errorln("device name not found")
-		fmt.Fprintf(w, "set device name")
+		http.Error(w, "set device name", http.StatusBadRequest)
 		return
 	}
 
 	deviceAddr := r.URL.Query().Get("deviceAddr")
 	if deviceAddr == "" {
 		log.Errorln("device addr not found")
-		fmt.Fprintf(w, "set device addr")
+		http.Error(w, "set device addr", http.StatusBadRequest)
 		return
 	}
 
@@ -68,7 +67,7 @@ func (s *Server) removeIotDevice(w http.ResponseWriter, r *http.Request) {
 	deviceName := r.URL.Query().Get("deviceName")
 	if deviceName == "" {
 		log.Errorln("device name not found")
-		fmt.Fprintf(w, "set device name")
+		http.Error(w, "set device name", http.StatusBadRequest)
 		return
 	}
 
@@ -86,7 +85,7 @@ func (s *Server) getLogs(w http.ResponseWriter, r *http.Request) {
 	countLogs := r.URL.Query().Get("countLogs")
 	if countLogs == "" {
 		log.Errorln("count logs not found")
-		fmt.Fprintf(w, "set count logs")
+		http.Error(w, "set count logs", http.StatusBadRequest)
 		return
 	}
 	countLogsInt, err := strconv.Atoi(countLogs)

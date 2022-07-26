@@ -88,7 +88,7 @@ func TestServerAddIotDeviceEmptyDeviceName(t *testing.T) {
 	w := httptest.NewRecorder()
 	proxyServer.addIotDevice(w, req)
 
-	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
+	if want, got := http.StatusBadRequest, w.Result().StatusCode; want != got {
 		t.Fatalf("expected a %d, instead got: %d", want, got)
 	}
 
@@ -102,7 +102,7 @@ func TestServerAddIotDeviceEmptyDeviceAddr(t *testing.T) {
 	w := httptest.NewRecorder()
 	proxyServer.addIotDevice(w, req)
 
-	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
+	if want, got := http.StatusBadRequest, w.Result().StatusCode; want != got {
 		t.Fatalf("expected a %d, instead got: %d", want, got)
 	}
 
@@ -126,7 +126,7 @@ func TestServerGetInformationFromIotDeviceFail(t *testing.T) {
 	w := httptest.NewRecorder()
 	proxyServer.getInformationFromIotDevice(w, req)
 
-	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
+	if want, got := http.StatusBadRequest, w.Result().StatusCode; want != got {
 		t.Fatalf("expected a %d, instead got: %d", want, got)
 	}
 
@@ -170,7 +170,7 @@ func TestServerRemoveIotDeviceFail(t *testing.T) {
 	w := httptest.NewRecorder()
 	proxyServer.removeIotDevice(w, req)
 
-	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
+	if want, got := http.StatusBadRequest, w.Result().StatusCode; want != got {
 		t.Fatalf("expected a %d, instead got: %d", want, got)
 	}
 
@@ -200,7 +200,7 @@ func TestServerGetLogsEmptyCount(t *testing.T) {
 	w := httptest.NewRecorder()
 	proxyServer.getLogs(w, req)
 
-	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
+	if want, got := http.StatusBadRequest, w.Result().StatusCode; want != got {
 		t.Fatalf("expected a %d, instead got: %d", want, got)
 	}
 
