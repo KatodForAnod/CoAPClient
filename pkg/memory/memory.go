@@ -1,7 +1,6 @@
 package memory
 
 import (
-	"errors"
 	"fmt"
 	"github.com/plgd-dev/go-coap/v2/message"
 	log "github.com/sirupsen/logrus"
@@ -43,7 +42,6 @@ func (b *MemBuff) InitStruct() error {
 }
 
 func (b *MemBuff) Save(msg []byte, typeMsg message.MediaType, nameDevice string) error {
-	log.Println("save in membuff")
 	buff, isExist := b.buffers[nameDevice]
 	if !isExist {
 		newBuff := make([]byte, 0)
@@ -56,12 +54,9 @@ func (b *MemBuff) Save(msg []byte, typeMsg message.MediaType, nameDevice string)
 }
 
 func (b *MemBuff) Load(nameDevice string) ([]byte, error) {
-	log.Println("load from membuff")
 	buff, isExist := b.buffers[nameDevice]
 	if !isExist {
-		err := errors.New("not found")
-		log.Errorln(err)
-		return []byte{}, err
+		return []byte{}, fmt.Errorf("device %s not found", nameDevice)
 	}
 
 	return buff, nil
@@ -71,20 +66,16 @@ func (b *MemBuff) FlushToFile(nameDevice string) error {
 	log.Println("fluash to file in membuff")
 	file, err := os.Create(nameDevice + ".txt") // if already exist??
 	if err != nil {
-		log.Errorln(err)
-		return err
+		return fmt.Errorf("flust to file err: %s", err.Error())
 	}
 
 	buff, isExist := b.buffers[nameDevice]
 	if !isExist {
-		err := errors.New("not found")
-		log.Errorln(err)
-		return err
+		return fmt.Errorf("device %s not found", nameDevice)
 	}
 	_, err = file.Write(buff)
 	if err != nil {
-		log.Errorln(err)
-		return err
+		return fmt.Errorf("file write err: %s", err.Error())
 	}
 	b.buffers[nameDevice] = []byte{}
 

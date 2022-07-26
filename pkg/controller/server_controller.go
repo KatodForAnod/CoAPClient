@@ -5,7 +5,6 @@ import (
 	"CoAPProxyServer/pkg/iot"
 	"CoAPProxyServer/pkg/logsetting"
 	"CoAPProxyServer/pkg/memory"
-	log "github.com/sirupsen/logrus"
 )
 
 type Controller struct {
@@ -20,11 +19,8 @@ func (c *Controller) InitStruct(config config.Config,
 }
 
 func (c *Controller) GetInformation(deviceName string) ([]byte, error) {
-	log.Println("controller get information of iot device", deviceName)
-
 	load, err := c.mem.Load(deviceName)
 	if err != nil {
-		log.Errorln(err)
 		return []byte{}, err
 	}
 
@@ -32,7 +28,6 @@ func (c *Controller) GetInformation(deviceName string) ([]byte, error) {
 }
 
 func (c *Controller) NewIotDeviceObserve(iotConfig config.IotConfig) error {
-	log.Println("controller new iotDevicesObserve")
 	iotDev := iot.IoTDevice{}
 	iotDev.Init(iotConfig)
 	var arr []*iot.IoTDevice
@@ -40,13 +35,11 @@ func (c *Controller) NewIotDeviceObserve(iotConfig config.IotConfig) error {
 
 	err := c.ioTsController.AddIoTs(arr)
 	if err != nil {
-		log.Errorln(err)
 		return err
 	}
 
 	err = c.ioTsController.StartInformationCollect()
 	if err != nil {
-		log.Errorln(err)
 		return err
 	}
 
@@ -54,22 +47,18 @@ func (c *Controller) NewIotDeviceObserve(iotConfig config.IotConfig) error {
 }
 
 func (c *Controller) RemoveIoTDeviceObserve(ioTsConfig []config.IotConfig) error {
-	log.Println("controller remove ioTDeviceObserve")
 	c.ioTsController.RemoveIoTs(ioTsConfig)
 	return nil
 }
 
 func (c *Controller) GetLastNRowsLogs(nRows int) ([]string, error) {
-	log.Println("controller get lastNRowsLogs")
 	file, err := logsetting.OpenLastLogFile()
 	if err != nil {
-		log.Errorln(err)
 		return []string{}, err
 	}
 
 	logs, err := logsetting.GetNLastLines(file, nRows)
 	if err != nil {
-		log.Errorln(err)
 		return []string{}, err
 	}
 

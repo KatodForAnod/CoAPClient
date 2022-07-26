@@ -5,7 +5,7 @@ import (
 	"CoAPProxyServer/pkg/iot"
 	"CoAPProxyServer/pkg/memory"
 	"context"
-	"errors"
+	"fmt"
 	"github.com/plgd-dev/go-coap/v2/message"
 	log "github.com/sirupsen/logrus"
 	"time"
@@ -22,12 +22,9 @@ func (c *IoTsController) Init(config config.Config, mem memory.Memory) {
 }
 
 func (c *IoTsController) AddIoTs(iots []*iot.IoTDevice) error {
-	log.Println("add iots")
 	for _, device := range iots {
 		if _, isExist := c.ioTDevices[device.GetName()]; isExist {
-			err := errors.New("device " + device.GetName() + " already exist")
-			log.Errorln(err)
-			return err
+			return fmt.Errorf("device %s already exist", device.GetName())
 		}
 	}
 
@@ -38,7 +35,6 @@ func (c *IoTsController) AddIoTs(iots []*iot.IoTDevice) error {
 }
 
 func (c *IoTsController) RemoveIoTs(IoTsConfig []config.IotConfig) {
-	log.Println("remove iots")
 	for _, device := range IoTsConfig {
 		if iotDevice, isExist := c.ioTDevices[device.Name]; isExist {
 			err := iotDevice.StopObserveInform()
@@ -56,8 +52,6 @@ func (c *IoTsController) RemoveIoTs(IoTsConfig []config.IotConfig) {
 }
 
 func (c *IoTsController) StartInformationCollect() error {
-	log.Println("start information collect")
-
 	for _, device := range c.ioTDevices {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
@@ -83,8 +77,6 @@ func (c *IoTsController) StartInformationCollect() error {
 }
 
 func (c *IoTsController) StopInformationCollect() error {
-	log.Println("stop information collect")
-
 	for _, device := range c.ioTDevices {
 		if !device.IsObserveInformProcess() {
 			continue // if device already stopped
@@ -109,7 +101,6 @@ func (c *IoTsController) createSaveFunc(d time.Duration,
 	return func(msg []byte, msgType message.MediaType) error {
 		timer.Reset(d)
 		if err := c.mem.Save(msg, msgType, iotDevice.GetName()); err != nil {
-			log.Errorln(err)
 			return err
 		}
 		return nil

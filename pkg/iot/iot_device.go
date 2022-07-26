@@ -2,7 +2,7 @@ package iot
 
 import (
 	"CoAPProxyServer/pkg/config"
-	"errors"
+	"fmt"
 	"github.com/plgd-dev/go-coap/v2/message"
 	"github.com/plgd-dev/go-coap/v2/udp"
 	"github.com/plgd-dev/go-coap/v2/udp/client"
@@ -40,14 +40,11 @@ func (d *IoTDevice) Init(config config.IotConfig) {
 func (d *IoTDevice) Ping(ctx context.Context) error {
 	log.Println("ping iot", d.name, "device")
 	if d.conn == nil {
-		err := errors.New("nil connection if iot " + d.name)
-		log.Errorln(err)
-		return err
+		return fmt.Errorf("nil connection if iot %s", d.name)
 	}
 
 	if err := d.conn.Ping(ctx); err != nil {
-		log.Errorln(err)
-		return err
+		return fmt.Errorf("ping %s iot device", err)
 	}
 
 	return nil
@@ -106,8 +103,7 @@ func (d *IoTDevice) StopObserveInform() error {
 	defer cancel()
 
 	if err := d.observe.Cancel(ctx); err != nil {
-		log.Errorln(err)
-		return err
+		return fmt.Errorf("iot %s device cancel err:%s", d.name, err.Error())
 	}
 	return nil
 }
@@ -120,8 +116,7 @@ func (d *IoTDevice) Connect() error {
 	log.Println("connecting to iot", d.name)
 	conn, err := udp.Dial(d.addr)
 	if err != nil {
-		log.Errorf("Error dialing: %v\n", err)
-		return err
+		return fmt.Errorf("Error dialing: %v\n", err)
 	}
 
 	d.conn = conn
@@ -132,8 +127,7 @@ func (d *IoTDevice) Disconnect() error {
 	log.Println("disconnecting from iot", d.name)
 	err := d.conn.Close()
 	if err != nil {
-		log.Errorln(err)
-		return err
+		return fmt.Errorf("iot %s device disconnect err:%s", d.name, err.Error())
 	}
 
 	return nil

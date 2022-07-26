@@ -2,7 +2,7 @@ package config
 
 import (
 	"encoding/json"
-	log "github.com/sirupsen/logrus"
+	"fmt"
 	"io/ioutil"
 )
 
@@ -26,8 +26,7 @@ func LoadConfig() (loadedConf Config, err error) {
 		ProxyServerAddr: "localhost:8000"}*/
 	data, err := ioutil.ReadFile(configPath)
 	if err != nil {
-		log.Errorln(err)
-		return Config{}, err
+		return Config{}, fmt.Errorf("loadconfig err:%s", err.Error())
 	}
 
 	err = json.Unmarshal(data, &loadedConf)
